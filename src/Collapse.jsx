@@ -7,6 +7,7 @@ class Collapse extends Component {
   static propTypes = {
     open: PropTypes.bool,
     lazy: PropTypes.bool,
+    render: PropTypes.func,
   }
 
   static defaultProps = {
@@ -30,7 +31,7 @@ class Collapse extends Component {
   }
 
   render() {
-    const { open, lazy, style, children, ...props } = this.props
+    const { open, lazy, style, render, children, ...props } = this.props
     return (
       <Fluid
         height={open ? 'auto' : 0}
@@ -48,7 +49,9 @@ class Collapse extends Component {
           return (
             this.state.renderComponent &&
             <Animated.div style={collapseStyles} {...props}>
-              {cloneElement(Children.only(children), { ref: childRef })}
+              {typeof render === 'function'
+                ? render({ childRef, isAnimating })
+                : cloneElement(Children.only(children), { ref: childRef })}
             </Animated.div>
           )
         }}
