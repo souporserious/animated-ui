@@ -7,8 +7,29 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM, { findDOMNode } from 'react-dom'
+import { parseToRgb } from 'polished'
 
-import { Collapse, Fluid } from '../src'
+import { Animate, Collapse, Fluid } from '../src'
+
+function toRgbaString(color) {
+  const { red, green, blue, alpha = 1 } = parseToRgb(color)
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`
+}
+
+function MyComponent({ innerRef, children }) {
+  return (
+    <div
+      ref={innerRef}
+      style={{
+        padding: 12,
+        backgroundColor: 'rebeccapurple',
+        color: 'white',
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 class App extends Component {
   state = {
@@ -50,9 +71,69 @@ class App extends Component {
           </div>
         </Collapse>
 
-        <Collapse open={!isOpen} style={{ backgroundColor: 'orange' }}>
-          <h1 style={{ margin: 0 }}>This is another title</h1>
-        </Collapse>
+        <Collapse
+          open={!isOpen}
+          render={({ childRef }) =>
+            <MyComponent innerRef={childRef}>
+              This is a custom wrapped component using the render prop to pass
+              the childRef down properly.
+            </MyComponent>}
+        />
+
+        <Animate
+          style={
+            isOpen
+              ? {
+                  opacity: 1,
+                  transform: [{ scale: 1 }, { translateY: 0 }],
+                }
+              : {
+                  opacity: 0,
+                  transform: [{ scale: 0.9 }, { translateY: 100 }],
+                }
+          }
+          staticStyles={{
+            backgroundColor: 'pink',
+          }}
+        >
+          Animated 💫
+        </Animate>
+
+        <Animate
+          style={
+            isOpen ? { color: 'rgb(0, 0, 0)' } : { color: 'rgb(100, 255, 255)' }
+          }
+        >
+          Color interpolation
+        </Animate>
+
+        {/* <Transition
+          items={{
+            children: 1,
+          }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+          renderItem={props =>
+            <Collapse open={props.style.opacity > 0}>
+              <div {...props}>
+                {children}
+              </div>
+            </Collapse>}
+        /> */}
+
+        {/* <Transition
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+          renderChild={props =>
+            <Collapse open={props.style.opacity > 0}>
+              <div {...props}>
+                {children}
+              </div>
+            </Collapse>}
+        >
+         <div>Cool Beans</div>
+         <div>What</div>
+        </Transition> */}
       </div>
     )
   }
