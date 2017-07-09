@@ -9,7 +9,14 @@ import PropTypes from 'prop-types'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { parseToRgb } from 'polished'
 
-import { Animate, Collapse, Fluid } from '../src'
+import { Animate, Collapse, Fluid, Transition, TransitionGroup } from '../src'
+
+// // enter, appear, leave
+// <TransitionGroup renderChild={(child, state) => <Collaps isOpen={state.entered}>{child}</Collaps>}>
+//   <div>Cool</div>
+//   <div>Cool</div>
+//   <div>Cool</div>
+// </TransitionGroup>
 
 function toRgbaString(color) {
   const { red, green, blue, alpha = 1 } = parseToRgb(color)
@@ -29,6 +36,39 @@ function MyComponent({ innerRef, children }) {
       {children}
     </div>
   )
+}
+
+class TodoList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { items: ['hello', 'world', 'click', 'me'] }
+  }
+  handleAdd() {
+    const newItems = this.state.items.concat([prompt('Enter some text')])
+    this.setState({ items: newItems })
+  }
+  handleRemove(i) {
+    let newItems = this.state.items.slice()
+    newItems.splice(i, 1)
+    this.setState({ items: newItems })
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={() => this.handleAdd()}>Add Item</button>
+        <TransitionGroup enter={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          {this.state.items.map((item, i) =>
+            <Transition key={item}>
+              <div>
+                {item}{' '}
+                <button onClick={() => this.handleRemove(i)}>remove</button>
+              </div>
+            </Transition>
+          )}
+        </TransitionGroup>
+      </div>
+    )
+  }
 }
 
 class App extends Component {
@@ -57,15 +97,15 @@ class App extends Component {
 
         <Collapse open={isOpen} style={{ backgroundColor: 'orange' }}>
           <div>
-            <h1 style={{ margin: 0 }}>React Fluid Container</h1>
+            <h1 style={{ margin: 0 }}>Collapse</h1>
             <Fluid
               height={isAuto ? 'auto' : height}
               style={{ overflow: 'hidden', backgroundColor: 'orange' }}
             >
               <div>
-                This is som really long text that might brek if it is long
-                enough This is som really long text that might brek if it is
-                long enough
+                This is some really long text that might brek if it is long
+                enough. This is some more really long text that might brek if it
+                is long enough.
               </div>
             </Fluid>
           </div>
@@ -106,6 +146,27 @@ class App extends Component {
         >
           Color interpolation
         </Animate>
+
+        <Transition
+          in={isOpen}
+          enter={{ opacity: 1, top: 0 }}
+          exit={{ opacity: 0, top: 20 }}
+          style={{ position: 'relative' }}
+        >
+          <div>It works!!!!!!</div>
+        </Transition>
+
+        <TransitionGroup
+          enter={{ opacity: 1, top: 0 }}
+          exit={{ opacity: 0, top: 20 }}
+        >
+          {isOpen &&
+            <Transition key="whatever" style={{ position: 'relative' }}>
+              It works!!!!!!
+            </Transition>}
+        </TransitionGroup>
+
+        <TodoList />
 
         {/* <Transition
           items={{
