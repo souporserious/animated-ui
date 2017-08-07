@@ -10,7 +10,7 @@
   "scripts": {
     "build:lib": "babel src --out-dir lib",
     "build": "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
-    "dev": "webpack-dev-server --devtool eval --hot --progress --colors --host 0.0.0.0",
+    "dev": "webpack-dev-server --progress --colors",
     "postbuild": "NODE_ENV=production TARGET=minify webpack --config webpack.prod.config.js",
     "prebuild": "rm -rf dist && mkdir dist",
     "prepublish": "npm run build",
@@ -22,7 +22,12 @@
     }
   },
   "babel": {
-    "presets": ["es2015", "stage-0", "react", "react-native"]
+    "presets": [
+      "es2015",
+      "stage-0",
+      "react",
+      "react-native"
+    ]
   },
   "repository": {
     "type": "git",
@@ -68,6 +73,7 @@
     "css-loader": "^0.25.0",
     "enzyme": "^2.9.1",
     "glamor": "next",
+    "html-webpack-plugin": "^2.30.1",
     "http-server": "^0.9.0",
     "jest": "^20.0.4",
     "node-libs-browser": "^1.0.0",
