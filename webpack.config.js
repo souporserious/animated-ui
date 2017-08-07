@@ -1,24 +1,38 @@
-var path = require('path');
-var nodeModulesDir = path.resolve(__dirname, 'node_modules');
+const path = require('path');
+const nodeModulesDir = path.resolve(__dirname, 'node_modules');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack')
 
 module.exports = {
-  entry: {
-    index: ['webpack/hot/dev-server', './example/index.jsx']
-  },
+  entry:  './example/index.jsx',
   output: {
-    path: './example',
+    path: path.resolve(__dirname, 'example'),
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
       { test: /\.(js|jsx)/, loader: 'babel-loader' },
       { test: /\.scss$/, loader: 'style!css!postcss!sass?sourceMap' }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
+  devtool: 'eval',
   devServer: {
-    contentBase: './example',
-  }
+    host: 'localhost',
+    contentBase: [path.join(__dirname, '/'), path.join(__dirname, 'example')],
+    historyApiFallback: true,
+    compress: true,
+    inline: true,
+    hot: true,
+    watchContentBase: true
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: './example/index.html'
+    }),
+    new webpack.HotModuleReplacementPlugin()
+  ]
 };
