@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 var TARGET = process.env.TARGET || null
 
 const externals = {
@@ -11,7 +11,7 @@ const externals = {
   },
 }
 
-var config = {
+const config = {
   entry: {
     index: './src/index.js',
   },
@@ -24,11 +24,11 @@ var config = {
     libraryTarget: 'umd',
   },
   module: {
-    loaders: [{ test: /\.(js|jsx)/, loader: 'babel-loader' }],
+    rules: [{ test: /\.(js|jsx)/, loader: 'babel-loader' }],
   },
   plugins: [],
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['.js', '.jsx'],
   },
   externals: externals,
 }

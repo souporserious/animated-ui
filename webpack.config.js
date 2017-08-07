@@ -1,5 +1,5 @@
-var path = require('path');
-var nodeModulesDir = path.resolve(__dirname, 'node_modules');
+const path = require('path');
+const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 
 module.exports = {
   entry: {
@@ -10,7 +10,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
       { test: /\.(js|jsx)/, loader: 'babel-loader' },
       { test: /\.scss$/, loader: 'style!css!postcss!sass?sourceMap' }
     ]
