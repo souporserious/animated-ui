@@ -1,5 +1,10 @@
 ## CHANGELOG
 
+### 0.3.1
+Remove `isAnimating` logic from `Toggle` until we can figure out why inputs can't stay focused.
+
+Added the ability to start with an `auto` width/height value or animate to an `auto` width/height value.
+
 ### 0.3.0
 Replace `Animate` with `Toggle` component to keep API simple and allow lazy rendering.
 

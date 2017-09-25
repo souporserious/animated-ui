@@ -170,11 +170,15 @@ class App extends Component {
         <Toggle
           isOn={isOpen}
           offStyles={{
+            width: 'auto',
+            height: 0,
             color: 'rgba(0, 0, 0, 0.5)',
             backgroundColor: 'orange',
             transform: [{ scale: 0.8 }],
           }}
           onStyles={{
+            width: 300,
+            height: 'auto',
             color: 'rgba(100, 255, 255, 1)',
             backgroundColor: 'purple',
             transform: [{ scale: 1 }],

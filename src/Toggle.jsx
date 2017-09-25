@@ -47,7 +47,7 @@ class Toggle extends Component {
     config: {},
     type: 'spring',
     isOn: false,
-    lazy: true,
+    lazy: false,
   }
 
   state = {
@@ -60,15 +60,16 @@ class Toggle extends Component {
 
   colorDrivers = {}
 
-  isAnimating = false
+  height = null
+
+  node = null
 
   transformDrivers = []
 
-  componentWillMount() {
-    this.animatedStyles = this.createAnimatedStyles()
-  }
+  width = null
 
   componentDidMount() {
+    this.animatedStyles = this.createAnimatedStyles()
     this.animateStyles(this.props.isOn, true)
   }
 
@@ -129,7 +130,13 @@ class Toggle extends Component {
         })
       } else {
         const offValue = this.props.offStyles[key]
-        animatedStyles[key] = new Animated.Value(offValue)
+        if (key === 'width' || key === 'height') {
+          animatedStyles[key] = new Animated.Value(
+            offValue === 'auto' ? this[key] : offValue
+          )
+        } else {
+          animatedStyles[key] = new Animated.Value(offValue)
+        }
       }
       return animatedStyles
     }, {})
@@ -147,13 +154,12 @@ class Toggle extends Component {
         }).start(({ finished }) => {
           if (finished) {
             delete this.animatingKeys[key]
-            if (Object.keys(this.animatingKeys).length === 0) {
-              this.isAnimating = false
-              if (this.props.lazy && !this.props.isOn) {
-                this.setState({ renderComponent: false })
-              } else {
-                this.forceUpdate()
-              }
+            if (
+              Object.keys(this.animatingKeys).length === 0 &&
+              this.props.lazy &&
+              !this.props.isOn
+            ) {
+              this.setState({ renderComponent: false })
             }
           }
         })
@@ -162,9 +168,6 @@ class Toggle extends Component {
   }
 
   animateStyles(isOn, instant) {
-    if (!instant) {
-      this.isAnimating = true
-    }
     Object.keys(this.animatedStyles).forEach(key => {
       const runAnimation = this.animate(key, instant)
       if (key === 'transform') {
@@ -180,17 +183,40 @@ class Toggle extends Component {
           toValue: isOn ? 1 : 0,
         })
       } else {
+        const nextValue = isOn
+          ? this.props.onStyles[key]
+          : this.props.offStyles[key]
+        let toValue = nextValue
+        if (nextValue === 'auto' && (key === 'width' || key === 'height')) {
+          toValue = this[key]
+          console.log({ toValue })
+        }
         runAnimation({
           driver: this.animatedStyles[key],
-          toValue: isOn ? this.props.onStyles[key] : this.props.offStyles[key],
+          toValue,
         })
       }
     })
   }
 
+  setRef = component => {
+    if (component && component.refs.node) {
+      this.node = component.refs.node
+      if (this.node) {
+        const width = this.node.scrollWidth
+        const height = this.node.scrollHeight
+        if (!this.width) {
+          this.width = width
+        }
+        if (!this.height) {
+          this.height = height
+        }
+      }
+    }
+  }
+
   render() {
     const {
-      children,
       component,
       config,
       isOn,
@@ -203,14 +229,11 @@ class Toggle extends Component {
     } = this.props
     return (
       this.state.renderComponent &&
-      createElement(
-        Animated.createAnimatedComponent(component),
-        {
-          style: { ...staticStyles, ...this.animatedStyles },
-          ...props,
-        },
-        typeof children === 'function' ? children(this.isAnimating) : children
-      )
+      createElement(Animated.createAnimatedComponent(component), {
+        ref: this.setRef,
+        style: { ...staticStyles, ...this.animatedStyles },
+        ...props,
+      })
     )
   }
 }
