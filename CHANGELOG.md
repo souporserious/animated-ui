@@ -1,5 +1,11 @@
 ## CHANGELOG
 
+### 0.2.2
+Added child function with `isAnimating` state to `Animate` component
+
+### 0.2.1
+Added the ability to animate any color property in `Animate` component
+
 ### 0.2.0
 Added `Animate` component
 

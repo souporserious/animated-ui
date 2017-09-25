@@ -35,14 +35,21 @@ class Animate extends Component {
     type: 'spring',
   }
 
-  state = { animatedStyles: { ...this.props.style } }
+  state = { animatedStyles: { ...this.props.style }, isAnimating: false }
+
+  animatingKeys = {}
 
   colorDrivers = {}
 
   transformDrivers = []
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ animatedStyles: this.createAnimatedStyles(nextProps) })
+    if (JSON.stringify(this.props.style) !== JSON.stringify(nextProps.style)) {
+      this.setState({
+        animatedStyles: this.createAnimatedStyles(nextProps),
+        isAnimating: true,
+      })
+    }
   }
 
   componentDidUpdate(lastProps) {
@@ -50,6 +57,7 @@ class Animate extends Component {
   }
 
   createAnimatedStyles(nextProps) {
+    const animatingKeys = []
     return Object.keys(nextProps.style).reduce((acc, key) => {
       const animatedStyles = { ...acc }
       if (key === 'transform') {
@@ -124,14 +132,37 @@ class Animate extends Component {
             ? animatedValue
             : new Animated.Value(currValue)
       }
+      this.animatingKeys[key] = true
       return animatedStyles
     }, {})
+  }
+
+  animate = key => ({ driver, toValue }) => {
+    const AnimatedType = Animated[this.props.type]
+    const listener = ({ value }) => {
+      if (value === toValue) {
+        delete this.animatingKeys[key]
+        driver.removeListener(id)
+        if (
+          Object.keys(this.animatingKeys).length === 0 &&
+          this.state.isAnimating
+        ) {
+          this.setState({ isAnimating: false })
+        }
+      }
+    }
+    const id = driver.addListener(listener)
+    AnimatedType(driver, {
+      ...this.props.config,
+      toValue,
+    }).start()
   }
 
   animateStyles(lastProps) {
     const AnimatedType = Animated[this.props.type]
 
     Object.keys(this.props.style).forEach(key => {
+      const runAnimation = this.animate(key)
       if (key === 'transform') {
         const lastTransform = lastProps.style.transform
         const currTransform = this.props.style.transform
@@ -148,43 +179,56 @@ class Animate extends Component {
           const currValue = currProp[currKey]
 
           if (parseFloat(lastValue) !== parseFloat(currValue)) {
-            AnimatedType(driverValue, {
-              ...this.props.config,
+            runAnimation({
+              driver: driverValue,
               toValue: parseFloat(currValue),
-            }).start()
+            })
           }
         })
       } else if (COLOR_PROPS.indexOf(key) > -1) {
         const lastColor = lastProps.style[key]
         const currColor = this.props.style[key]
         const colorDriver = this.colorDrivers[key]
+        const delta = colorDriver._value > 0 ? 0 : 1
         if (lastColor !== currColor) {
-          AnimatedType(colorDriver, {
-            ...this.props.config,
+          runAnimation({
+            driver: colorDriver,
             toValue: colorDriver._value > 0 ? 0 : 1,
-          }).start()
+          })
         }
       } else {
         const lastValue = lastProps.style[key]
         const currValue = this.props.style[key]
         const animatedValue = this.state.animatedStyles[key]
-
         if (lastValue !== currValue) {
-          AnimatedType(animatedValue, {
-            ...this.props.config,
+          runAnimation({
+            driver: animatedValue,
             toValue: currValue,
-          }).start()
+          })
         }
       }
     })
   }
 
   render() {
-    const { component, type, style, staticStyles, ...props } = this.props
+    const {
+      children,
+      component,
+      type,
+      config,
+      style,
+      staticStyles,
+      ...props
+    } = this.props
     const AnimatedComponent = Animated.createAnimatedComponent(component)
     return (
       <AnimatedComponent
         style={{ ...staticStyles, ...this.state.animatedStyles }}
+        children={
+          typeof children === 'function'
+            ? children(this.state.isAnimating)
+            : children
+        }
         {...props}
       />
     )

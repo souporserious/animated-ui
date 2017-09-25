@@ -148,12 +148,14 @@ class App extends Component {
                   height: 100,
                   color: 'rgba(0, 0, 0, 0.5)',
                   backgroundColor: 'orange',
+                  transform: [{ rotate: 1 }],
                 }
               : {
                   width: 200,
                   height: 200,
                   color: 'rgba(100, 255, 255, 1)',
                   backgroundColor: 'purple',
+                  transform: [{ scale: 0.8 }],
                 }
           }
         >
@@ -171,7 +173,9 @@ class App extends Component {
                 }
           }
         >
-          <input type="text" style={{ width: '100%' }} />
+          {isAnimating => (
+            <div>{isAnimating ? 'isAnimating' : 'isNotAnimating'}</div>
+          )}
         </Animate>
 
         <Transition
