@@ -1,5 +1,8 @@
 ## CHANGELOG
 
+### 0.3.0
+Replace `Animate` with `Toggle` component to keep API simple and allow lazy rendering.
+
 ### 0.2.2
 Added child function with `isAnimating` state to `Animate` component
 

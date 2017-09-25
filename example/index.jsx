@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import ReactDOM, { findDOMNode } from 'react-dom'
 import { parseToRgb } from 'polished'
 
-import { Animate, Collapse, Fluid, Transition, TransitionGroup } from '../src'
+import { Collapse, Fluid, Transition, TransitionGroup, Toggle } from '../src'
 
 // // enter, appear, leave
 // <TransitionGroup renderChild={(child, state) => <Collaps isOpen={state.entered}>{child}</Collaps>}>
@@ -73,10 +73,13 @@ class TodoList extends React.Component {
 
 class App extends Component {
   state = {
-    isOpen: true,
+    isOpen: false,
     isAuto: false,
     height: 0,
   }
+
+  setInputRef = c => (this.input = c)
+
   render() {
     const { height, isAuto, isOpen } = this.state
     return (
@@ -91,7 +94,13 @@ class App extends Component {
           Auto Height {isAuto ? 'Off' : 'On'}
         </button>
 
-        <button onClick={() => this.setState({ isOpen: !isOpen })}>
+        <button
+          onClick={() =>
+            this.setState(
+              { isOpen: !isOpen },
+              () => this.input && this.input.focus()
+            )}
+        >
           Collapse Toggle
         </button>
 
@@ -121,64 +130,75 @@ class App extends Component {
           )}
         />
 
-        <Animate
-          style={
-            isOpen
-              ? {
-                  opacity: 1,
-                  transform: [{ scale: 1 }, { translateY: 0 }],
-                }
-              : {
-                  opacity: 0,
-                  transform: [{ scale: 0.9 }, { translateY: 100 }],
-                }
-          }
+        <Toggle
+          isOn={isOpen}
+          offStyles={{
+            opacity: 0,
+            transform: [{ scale: 0.9 }, { translateY: 100 }, { rotate: 0 }],
+          }}
+          onStyles={{
+            opacity: 1,
+            transform: [{ scale: 1 }, { translateY: 0 }, { rotate: 360 }],
+          }}
           staticStyles={{
             backgroundColor: 'pink',
           }}
         >
           Animated 💫
-        </Animate>
+        </Toggle>
 
-        <Animate
-          style={
-            isOpen
-              ? {
-                  width: 100,
-                  height: 100,
-                  color: 'rgba(0, 0, 0, 0.5)',
-                  backgroundColor: 'orange',
-                  transform: [{ rotate: 1 }],
-                }
-              : {
-                  width: 200,
-                  height: 200,
-                  color: 'rgba(100, 255, 255, 1)',
-                  backgroundColor: 'purple',
-                  transform: [{ scale: 0.8 }],
-                }
-          }
+        <Toggle
+          isOn={isOpen}
+          offStyles={{
+            backgroundColor: 'orange',
+            color: 'blue',
+            transform: [{ scale: 0 }],
+          }}
+          onStyles={{
+            backgroundColor: 'blue',
+            color: 'orange',
+            transform: [{ scale: 1 }],
+          }}
+        >
+          <input
+            ref={this.setInputRef}
+            type="input"
+            defaultValue="Can animate inputs"
+          />
+        </Toggle>
+
+        <Toggle
+          isOn={isOpen}
+          offStyles={{
+            color: 'rgba(0, 0, 0, 0.5)',
+            backgroundColor: 'orange',
+            transform: [{ scale: 0.8 }],
+          }}
+          onStyles={{
+            color: 'rgba(100, 255, 255, 1)',
+            backgroundColor: 'purple',
+            transform: [{ scale: 1 }],
+          }}
         >
           Color interpolation
-        </Animate>
+        </Toggle>
 
-        <Animate
-          style={
-            isOpen
-              ? {
-                  width: 100,
-                }
-              : {
-                  width: 300,
-                }
-          }
-        >
-          {isAnimating => (
-            <div>{isAnimating ? 'isAnimating' : 'isNotAnimating'}</div>
-          )}
-        </Animate>
+        <Toggle
+          component="input"
+          isOn={isOpen}
+          offStyles={{
+            width: 0,
+            color: 'cyan',
+            backgroundColor: 'purple',
+          }}
+          onStyles={{
+            width: 100,
+            color: 'white',
+            backgroundColor: 'orange',
+          }}
+        />
 
-        <Transition
+        {/* <Transition
           in={isOpen}
           enter={{ opacity: 1, top: 0 }}
           exit={{ opacity: 0, top: 20 }}
@@ -198,7 +218,7 @@ class App extends Component {
           )}
         </TransitionGroup>
 
-        <TodoList />
+        <TodoList /> */}
 
         {/* <Transition
           items={{
