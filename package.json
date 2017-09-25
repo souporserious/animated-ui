@@ -1,17 +1,17 @@
 {
   "name": "animated-ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Animated UI components.",
   "main": "lib/index.js",
-  "files": [
-    "dist",
-    "lib"
-  ],
+  "files": ["dist", "lib"],
   "scripts": {
     "build:lib": "babel src --out-dir lib",
-    "build": "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
-    "dev": "webpack-dev-server --devtool eval --hot --progress --colors --host 0.0.0.0",
-    "postbuild": "NODE_ENV=production TARGET=minify webpack --config webpack.prod.config.js",
+    "build":
+      "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
+    "dev":
+      "webpack-dev-server --devtool eval --hot --progress --colors --host 0.0.0.0",
+    "postbuild":
+      "NODE_ENV=production TARGET=minify webpack --config webpack.prod.config.js",
     "prebuild": "rm -rf dist && mkdir dist",
     "prepublish": "npm run build"
   },
@@ -29,7 +29,8 @@
     "fluid",
     "toggle"
   ],
-  "author": "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
+  "author":
+    "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/souporserious/animated-ui/issues"

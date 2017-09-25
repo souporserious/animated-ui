@@ -57,14 +57,14 @@ class TodoList extends React.Component {
       <div>
         <button onClick={() => this.handleAdd()}>Add Item</button>
         <TransitionGroup enter={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          {this.state.items.map((item, i) =>
+          {this.state.items.map((item, i) => (
             <Transition key={item}>
               <div>
                 {item}{' '}
                 <button onClick={() => this.handleRemove(i)}>remove</button>
               </div>
             </Transition>
-          )}
+          ))}
         </TransitionGroup>
       </div>
     )
@@ -113,11 +113,12 @@ class App extends Component {
 
         <Collapse
           open={!isOpen}
-          render={({ childRef }) =>
+          render={({ childRef }) => (
             <MyComponent innerRef={childRef}>
               This is a custom wrapped component using the render prop to pass
               the childRef down properly.
-            </MyComponent>}
+            </MyComponent>
+          )}
         />
 
         <Animate
@@ -141,10 +142,36 @@ class App extends Component {
 
         <Animate
           style={
-            isOpen ? { color: 'rgb(0, 0, 0)' } : { color: 'rgb(100, 255, 255)' }
+            isOpen
+              ? {
+                  width: 100,
+                  height: 100,
+                  color: 'rgba(0, 0, 0, 0.5)',
+                  backgroundColor: 'orange',
+                }
+              : {
+                  width: 200,
+                  height: 200,
+                  color: 'rgba(100, 255, 255, 1)',
+                  backgroundColor: 'purple',
+                }
           }
         >
           Color interpolation
+        </Animate>
+
+        <Animate
+          style={
+            isOpen
+              ? {
+                  width: 100,
+                }
+              : {
+                  width: 300,
+                }
+          }
+        >
+          <input type="text" style={{ width: '100%' }} />
         </Animate>
 
         <Transition
@@ -160,10 +187,11 @@ class App extends Component {
           enter={{ opacity: 1, top: 0 }}
           exit={{ opacity: 0, top: 20 }}
         >
-          {isOpen &&
+          {isOpen && (
             <Transition key="whatever" style={{ position: 'relative' }}>
               It works!!!!!!
-            </Transition>}
+            </Transition>
+          )}
         </TransitionGroup>
 
         <TodoList />
