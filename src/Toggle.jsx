@@ -189,7 +189,6 @@ class Toggle extends Component {
         let toValue = nextValue
         if (nextValue === 'auto' && (key === 'width' || key === 'height')) {
           toValue = this[key]
-          console.log({ toValue })
         }
         runAnimation({
           driver: this.animatedStyles[key],
