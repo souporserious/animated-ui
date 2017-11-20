@@ -1,17 +1,17 @@
 {
   "name": "animated-ui",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Animated UI components.",
   "main": "lib/index.js",
-  "files": ["dist", "lib"],
+  "files": [
+    "dist",
+    "lib"
+  ],
   "scripts": {
     "build:lib": "babel src --out-dir lib",
-    "build":
-      "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
-    "dev":
-      "webpack-dev-server --devtool eval --hot --progress --colors --host 0.0.0.0",
-    "postbuild":
-      "NODE_ENV=production TARGET=minify webpack --config webpack.prod.config.js",
+    "build": "npm run build:lib && NODE_ENV=production webpack --config webpack.prod.config.js",
+    "dev": "webpack-dev-server --devtool eval --hot --progress --colors --host 0.0.0.0",
+    "postbuild": "NODE_ENV=production TARGET=minify webpack --config webpack.prod.config.js",
     "prebuild": "rm -rf dist && mkdir dist",
     "prepublish": "npm run build"
   },
@@ -29,21 +29,20 @@
     "fluid",
     "toggle"
   ],
-  "author":
-    "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
+  "author": "Travis Arnold <travis@souporserious.com> (http://souporserious.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/souporserious/animated-ui/issues"
   },
   "homepage": "https://github.com/souporserious/animated-ui",
   "peerDependencies": {
-    "prop-types": "^15.5.0",
-    "react": "^15.5.0",
-    "react-dom": "^15.5.0"
+    "react": ">0.13.0",
+    "react-dom": ">0.13.0"
   },
   "dependencies": {
-    "animated": "^0.2.0",
-    "resize-observer-polyfill": "^1.4.2"
+    "animated": "0.2.1",
+    "prop-types": "^15.6.0",
+    "resize-observer-polyfill": "1.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
@@ -57,13 +56,12 @@
     "chokidar": "^1.6.1",
     "create-styled-element": "^0.4.0",
     "css-loader": "^0.25.0",
-    "glamor": "next",
+    "glamor": "^2.20.40",
     "http-server": "^0.9.0",
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.2.0",
     "polished": "^1.2.1",
     "postcss-loader": "^0.13.0",
-    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-aria": "^0.4.0",
     "react-dom": "^15.6.1",

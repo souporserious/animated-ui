@@ -1,5 +1,10 @@
 ## CHANGELOG
 
+### 0.3.2
+Upgrade dependencies
+
+Move `prop-types` from peerDependencies to dependencies
+
 ### 0.3.1
 Remove `isAnimating` logic from `Toggle` until we can figure out why inputs can't stay focused.
 
